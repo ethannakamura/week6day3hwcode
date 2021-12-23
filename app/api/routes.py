@@ -1,14 +1,8 @@
 from flask import Blueprint, jsonify
 from app.models import Player
 
-# actually set up our blueprint and enable communication between our blueprint and the main flask app
-# computers are dumb - if we don't tell the blueprint to exist, it won't exist
-# and if we don't tell the application how to talk to the blueprint, it will have no idea how to talk to the blueprint
-# instantiate a blueprint
 api = Blueprint('api', __name__, url_prefix='/api')
 
-
-# the decorator for a route belonging to a blueprint starts with @<blueprint_name> instead of @app
 @api.route('/')
 def test():
     return {'datadatadata': 'ooh look at this fancy data'}
@@ -39,7 +33,7 @@ def get_team(tm):
     [GET] /api/Manchester_City
     returns all players on the applicable team
     """
-    tm = tm.replace('_', ' ') # team name from url will have an _ in place of the space -> replace that underscore with a space
+    tm = tm.replace('_', ' ')
     players = Player.query.filter_by(team=tm).all()
     if not players:
         return jsonify({tm: None})

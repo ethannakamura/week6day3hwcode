@@ -1,26 +1,19 @@
-# import sqlalchemy to create our instance of our ORM (translator between python and SQL)
 from flask_sqlalchemy import SQLAlchemy
 
-# import our LoginManager and instantiate
 from flask_login import LoginManager, UserMixin
 
-# imports for tools for our models
 from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash
 from uuid import uuid4
 
-# actually create the instance of SQLAlchemy
 db = SQLAlchemy()
 
-# instance of login manager
 login = LoginManager()
 
-# necessary user_loader function that flask_login needs us to write in order to work
 @login.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
-# let's set up our User object
 class User(db.Model, UserMixin):
     id = db.Column(db.String, primary_key=True)
     username = db.Column(db.String(15), nullable=False, unique=True)
@@ -35,17 +28,14 @@ class User(db.Model, UserMixin):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        self.password = generate_password_hash(password) # salt and hash this password
-        self.id = str(uuid4()) # generate an id in some manner
+        self.password = generate_password_hash(password) 
+        self.id = str(uuid4())
 
-
-# design a new object - player object - that will be the focus of my API CRUD operations
-# also looking toward the future I'm probably planning to use this model for my ecommerce website
 class Player(db.Model):
     id = db.Column(db.String, primary_key=True)
     number = db.Column(db.Integer)
-    first_name = db.Column(db.String(150), nullable=False) # first_name VARCHAR(150) not null
-    last_name = db.Column(db.String(150), nullable=True) # last_name VARCHAR(150)
+    first_name = db.Column(db.String(150), nullable=False) 
+    last_name = db.Column(db.String(150), nullable=True) 
     position = db.Column(db.String(15))
     team = db.Column(db.String(150), nullable=False, default='Free Transfer')
     nationality = db.Column(db.String(150))
